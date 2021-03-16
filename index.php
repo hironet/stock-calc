@@ -71,7 +71,7 @@ $calc_num = $calc_num < CALC_NUM_MIN ? CALC_NUM_MIN : $calc_num;
             </td>
             <td>
               <!-- 購入株数 -->
-              <output id="purchase-number-<?= $i ?>"></output>
+              <output id="purchase_num-<?= $i ?>"></output>
             </td>
           </tr>
 <?php } ?>
@@ -82,21 +82,24 @@ $calc_num = $calc_num < CALC_NUM_MIN ? CALC_NUM_MIN : $calc_num;
   <script>
     window.addEventListener('DOMContentLoaded', function() {
       document.getElementById('calc-form').addEventListener('input', function(e) {
-        let valuation_sum = Number(document.getElementById('purchase-capacity').value);  // 買付余力で初期化
-        <?php for ($i = 1; $i <= $calc_num; $i++) { ?>
-          valuation_sum += Number(document.getElementById('valuation-<?= $i ?>').value);  // 評価額の合計を計算
-        <?php } ?>
-        let after_valuation = valuation_sum / <?= $calc_num ?>;  // 買付後の評価額を計算
+        let total_amount = Number(document.getElementById('purchase-capacity').value);  // 資産総額を買付余力で初期化
+<?php for ($i = 1; $i <= $calc_num; $i++) { ?>
+        total_amount += Number(document.getElementById('valuation-<?= $i ?>').value);  // 資産総額に各銘柄の評価額を加算
+<?php } ?>
+
+        let target_valuation = total_amount / <?= $calc_num ?>;  // 目標評価額
+        let valuation;       // 評価額
+        let stock_price;     // 株価
         let purchase_price;  // 購入金額
-        let purchase_number;  // 購入株数
-        <?php for ($i = 1; $i <= $calc_num; $i++) { ?>
-          purchase_price = after_valuation - Number(document.getElementById('valuation-<?= $i ?>').value);  // 購入金額を計算
-          purchase_number = purchase_price / Number(document.getElementById('stock-price-<?= $i ?>').value)  // 購入株数を計算
-          purchase_price = Math.round(purchase_price * 100) / 100;
-          document.getElementById('purchase-price-<?= $i ?>').value = purchase_price;
-          purchase_number = Math.floor(purchase_number);
-          document.getElementById('purchase-number-<?= $i ?>').value = purchase_number;
-        <?php } ?>
+        let purchase_num;    // 購入株数
+<?php for ($i = 1; $i <= $calc_num; $i++) { ?>
+        valuation = Number(document.getElementById('valuation-<?= $i ?>').value);
+        stock_price = Number(document.getElementById('stock-price-<?= $i ?>').value);
+        purchase_price = Math.round((target_valuation - valuation) * 100) / 100;  // 購入金額を計算
+        purchase_num = Math.floor(purchase_price / stock_price);  // 購入株数を計算
+        document.getElementById('purchase-price-<?= $i ?>').value = purchase_price;
+        document.getElementById('purchase_num-<?= $i ?>').value = purchase_num;
+<?php } ?>
       });
     });
   </script>
