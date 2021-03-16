@@ -2,7 +2,7 @@
 const CALC_NUM_MIN = 1;
 const CALC_NUM_MAX = 10;
 const CALC_NUM_DEFALUT = 3;
-$calc_num = isset($_GET['calc-num']) ? $_GET['calc-num'] : CALC_NUM_DEFALUT;
+$calc_num = isset($_GET['calc-num']) && is_numeric($_GET['calc-num']) ? $_GET['calc-num'] : CALC_NUM_DEFALUT;
 $calc_num = $calc_num > CALC_NUM_MAX ? CALC_NUM_MAX : $calc_num;
 $calc_num = $calc_num < CALC_NUM_MIN ? CALC_NUM_MIN : $calc_num;
 ?>
