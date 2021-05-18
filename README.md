@@ -6,7 +6,7 @@
 
 ## デモサイト
 
-https://portfolio.engineer-hiro.com/stock-purchase/
+https://stock-purchase.engineer-hiro.com/
 
 ## 技術要素
 
